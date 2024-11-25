@@ -28,5 +28,5 @@ Aplikacija pošilja **potisna sporočila** (push notifications), ki motivirajo u
 ---
 
 ### **Avtor**
-- **Ime**: [Vaše ime]  
-- **E-pošta**: [Vaša e-pošta]  
+- **Ime**: Stanoja Božinov
+  
