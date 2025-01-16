@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "FunRun"
 include(":app")
- 
+include(":RunLibrary")
