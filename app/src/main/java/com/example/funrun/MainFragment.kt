@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatDelegate
 import com.example.funrun.databinding.FragmentMainBinding
 import com.example.funrun.databinding.FragmentSettingsDialogBinding
 import com.example.runlibrary.Run
@@ -29,7 +30,16 @@ class MainFragment : Fragment(R.layout.fragment_main) {
     private var param2: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
+        val app = requireActivity().application as MyApplication
+        val dialogBinding = FragmentSettingsDialogBinding.inflate(layoutInflater)
+        dialogBinding.darkModeSwitch.isChecked = app.isDarkModeEnabled()
+        val isDarkMode = dialogBinding.darkModeSwitch.isChecked
+        AppCompatDelegate.setDefaultNightMode(
+            if (isDarkMode) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
+        )
+
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
@@ -83,12 +93,44 @@ class MainFragment : Fragment(R.layout.fragment_main) {
     private fun openSettingsDialog() {
         // Inflate the settings dialog layout
         val dialogBinding = FragmentSettingsDialogBinding.inflate(layoutInflater)
+        val app = requireActivity().application as MyApplication
+
+        // Load current settings
+        dialogBinding.darkModeSwitch.isChecked = app.isDarkModeEnabled()
+        dialogBinding.weeklyGoalInput.setText(app.getWeeklyGoal().toString())
 
         // Create and display the dialog
-        AlertDialog.Builder(requireContext())
+        val dialog = AlertDialog.Builder(requireContext())
             .setView(dialogBinding.root)
-            .setPositiveButton("Close") { dialog, _ -> dialog.dismiss() }
+            .setPositiveButton("Save") { _, _ ->
+                // Save dark mode preference
+                val isDarkMode = dialogBinding.darkModeSwitch.isChecked
+                app.setDarkMode(isDarkMode)
+
+                AppCompatDelegate.setDefaultNightMode(
+                    if (isDarkMode) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
+                )
+
+                // Save weekly goal
+                val weeklyGoal = dialogBinding.weeklyGoalInput.text.toString().toFloatOrNull() ?: 50.0f
+                app.setWeeklyGoal(weeklyGoal)
+
+                // Update UI based on new weekly goal
+                updateProgressBar(weeklyGoal)
+            }
+            .setNegativeButton("Cancel", null)
             .show()
+    }
+    private fun updateProgressBar(weeklyGoal: Float) {
+        val app = requireActivity().application as MyApplication
+        val runList = app.getAllRuns()
+        val lastWeekRuns = filterRunsFromLastWeek(runList)
+
+        val totalDistance = lastWeekRuns.sumOf { it.distance }
+        val progressPercentage = ((totalDistance / weeklyGoal) * 100).toInt().coerceAtMost(100)
+
+        binding.circularProgressBar.progress = progressPercentage
+        binding.progressPercentageText.text = "$progressPercentage%"
     }
 
     companion object {
