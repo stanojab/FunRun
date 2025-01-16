@@ -2,8 +2,9 @@ package com.example.runlibrary
 
 class Run(
     val pace: Float,
-    val distance: Float,
-    val duration: Long
+    val distance: Double,
+    val duration: Long,
+    val timestamp: Long
 ) {
 
 }

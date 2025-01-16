@@ -5,6 +5,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
+import com.example.funrun.databinding.FragmentMainBinding
+import com.example.funrun.databinding.FragmentSettingsDialogBinding
+import com.example.runlibrary.Run
+import java.util.Calendar
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -16,7 +21,9 @@ private const val ARG_PARAM2 = "param2"
  * Use the [MainFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class MainFragment : Fragment() {
+class MainFragment : Fragment(R.layout.fragment_main) {
+
+    private lateinit var binding: FragmentMainBinding
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -33,8 +40,55 @@ class MainFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_main, container, false)
+        // Inflate the layout for this fragment using view binding
+        binding = FragmentMainBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.settingsIcon.setOnClickListener {
+            openSettingsDialog()
+        }
+
+        val app = requireActivity().application as MyApplication
+        val runList = app.getAllRuns() // gets all runs from the global class MyApp
+
+        val weeklyGoal = 50.0f
+        val lastWeekRuns = filterRunsFromLastWeek(runList)
+
+        val totalDistance= lastWeekRuns.sumOf { it.distance }
+
+        val progressPercentage = ((totalDistance / weeklyGoal) * 100).toInt().coerceAtMost(100)
+
+        binding.circularProgressBar.progress = progressPercentage
+        binding.progressPercentageText.text = "$progressPercentage%"
+
+        // Calculate metrics
+        val longestDistance = lastWeekRuns.maxOfOrNull { it.distance } ?: 0f
+        val bestPace = lastWeekRuns.minOfOrNull { it.pace } ?: 0f
+        val longestDuration = lastWeekRuns.maxOfOrNull { it.duration } ?: 0L
+
+        // Populate cards
+        binding.longestDistanceValue.text = "%.1f km".format(longestDistance)
+        binding.bestPaceValue.text = "%.1f min/km".format(bestPace)
+        binding.longestDurationValue.text = "${longestDuration / 60000} min"
+    }
+    private fun filterRunsFromLastWeek(runList: List<Run>): List<Run> {
+        val calendar = Calendar.getInstance()
+        calendar.add(Calendar.DAY_OF_YEAR, -7)
+        val oneWeekAgo = calendar.timeInMillis
+
+        return runList.filter { it.timestamp >= oneWeekAgo }
+    }
+    private fun openSettingsDialog() {
+        // Inflate the settings dialog layout
+        val dialogBinding = FragmentSettingsDialogBinding.inflate(layoutInflater)
+
+        // Create and display the dialog
+        AlertDialog.Builder(requireContext())
+            .setView(dialogBinding.root)
+            .setPositiveButton("Close") { dialog, _ -> dialog.dismiss() }
+            .show()
     }
 
     companion object {

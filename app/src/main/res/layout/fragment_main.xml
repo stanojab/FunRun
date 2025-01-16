@@ -6,10 +6,57 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp">
-    <!-- Title -->
 
-    <!-- Card for Longest Distance -->
 
+    <!-- Top Bar -->
+    <LinearLayout
+        android:id="@+id/topBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- App Title and Subtitle -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/appTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="FunRun"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="#FF6200EE" />
+
+            <TextView
+                android:id="@+id/appSubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Go farther &amp; faster"
+                android:textSize="14sp"
+                android:textStyle="italic"
+                android:textColor="#888888"
+                android:layout_marginTop="2dp" />
+        </LinearLayout>
+
+        <!-- Settings Icon -->
+        <ImageView
+            android:id="@+id/settingsIcon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_settings"
+            android:contentDescription="Settings"
+            android:layout_gravity="center_vertical"
+            android:clickable="true"
+            android:focusable="true"
+            app:tint="#000000" />
+    </LinearLayout>
     <TextView
         android:id="@+id/titleTextView"
         android:layout_width="wrap_content"
@@ -22,6 +69,38 @@
         app:layout_constraintHorizontal_bias="0.072"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+    <!-- Circular Progress Bar -->
+    <FrameLayout
+        android:id="@+id/progressBarContainer"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="100dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- Circular Progress Bar -->
+
+        <!-- Text in the center of the progress bar -->
+        <ProgressBar
+            android:id="@+id/circularProgressBar"
+            style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:indeterminateOnly="false"
+            android:max="100"
+            android:progress="0"
+            android:progressDrawable="@drawable/circular_progress_bar" />
+
+        <TextView
+            android:id="@+id/progressPercentageText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="0%"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </FrameLayout>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/longestDistanceCard"
