@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 class Run(
-    val pace: Float,
+    val pace: Double,
     val distance: Double,
     val duration: Long,
     val timestamp: Long
