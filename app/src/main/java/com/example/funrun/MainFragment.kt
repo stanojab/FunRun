@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import com.example.funrun.databinding.FragmentMainBinding
@@ -59,6 +61,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         binding.settingsIcon.setOnClickListener {
             openSettingsDialog()
         }
+        binding.addIcon.setOnClickListener{showAddRunDialog()}
         val run = Run(
             pace = 1.12,
             duration = 60,
@@ -127,6 +130,38 @@ class MainFragment : Fragment(R.layout.fragment_main) {
             }
             .setNegativeButton("Cancel", null)
             .show()
+    }
+    private fun showAddRunDialog() {
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_add_run, null)
+        val dialog = AlertDialog.Builder(requireContext())
+            .setTitle("Add Run")
+            .setView(dialogView)
+            .setPositiveButton("Add") { _, _ ->
+                val distanceInput = dialogView.findViewById<EditText>(R.id.etDistance).text.toString()
+                val durationInput = dialogView.findViewById<EditText>(R.id.etDuration).text.toString()
+                val paceInput = dialogView.findViewById<EditText>(R.id.etPace).text.toString()
+
+                if (distanceInput.isNotEmpty() && durationInput.isNotEmpty() && paceInput.isNotEmpty()) {
+                    val distance = distanceInput.toLong()
+                    val duration = durationInput.toDouble()
+                    val pace = paceInput.toDouble()
+                    val timestamp = System.currentTimeMillis()
+
+                    // Create a new run object
+                    val run = Run(pace, duration, distance, timestamp)
+
+                    // Add the run to the global list
+                    (requireActivity().application as MyApplication).addRun(run)
+
+                    Toast.makeText(requireContext(), "Run added!", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(requireContext(), "All fields are required", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .setNegativeButton("Cancel", null)
+            .create()
+
+        dialog.show()
     }
     private fun updateProgressBar(weeklyGoal: Float) {
         val app = requireActivity().application as MyApplication

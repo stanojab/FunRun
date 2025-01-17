@@ -57,7 +57,21 @@
             android:src="@drawable/ic_settings"
             app:tint="#000000"
             tools:ignore="TouchTargetSizeCheck" />
+        <ImageView
+            android:id="@+id/addIcon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center_vertical"
+            android:clickable="true"
+            android:contentDescription="ADD"
+            android:focusable="true"
+            android:src="@drawable/ic_add"
+            app:tint="#000000"
+            tools:ignore="TouchTargetSizeCheck" />
+
     </LinearLayout>
+
+    <!-- Circular Progress Bar -->
     <TextView
         android:id="@+id/titleTextView"
         android:layout_width="wrap_content"
@@ -67,10 +81,11 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.072"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-    <!-- Circular Progress Bar -->
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.479" />
+
     <FrameLayout
         android:id="@+id/progressBarContainer"
         android:layout_width="200dp"
