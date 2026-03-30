@@ -62,18 +62,13 @@ class MainFragment : Fragment(R.layout.fragment_main) {
             openSettingsDialog()
         }
         binding.addIcon.setOnClickListener{showAddRunDialog()}
-        val run = Run(
-            pace = 1.12,
-            duration = 60,
-            distance = 0.0,
-            timestamp = System.currentTimeMillis()
-        )
+
 
         val app = requireActivity().application as MyApplication
-        app.addRun(run)
+
         val runList = app.getAllRuns() // gets all runs from the global class MyApp
 
-        val weeklyGoal = 50.0f
+        val weeklyGoal = app.getWeeklyGoal()
         val lastWeekRuns = filterRunsFromLastWeek(runList)
 
         val totalDistance= lastWeekRuns.sumOf { it.distance }
