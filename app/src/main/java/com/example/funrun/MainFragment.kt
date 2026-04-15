@@ -71,11 +71,11 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         val weeklyGoal = app.getWeeklyGoal()
         val lastWeekRuns = filterRunsFromLastWeek(runList)
 
-        val totalDistance= lastWeekRuns.sumOf { it.distance }
+        val totalDistance = lastWeekRuns.sumOf { it.distance }.toFloat()
 
         val progressPercentage = ((totalDistance / weeklyGoal) * 100).toInt().coerceAtMost(100)
 
-        binding.circularProgressBar.progress = progressPercentage
+        binding.circularProgressBar.progress = progressPercentage.toFloat()
         binding.progressPercentageText.text = "$progressPercentage%"
 
         // Calculate metrics
@@ -163,10 +163,10 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         val runList = app.getAllRuns()
         val lastWeekRuns = filterRunsFromLastWeek(runList)
 
-        val totalDistance = lastWeekRuns.sumOf { it.distance }
+        val totalDistance = lastWeekRuns.sumOf { it.distance }.toFloat()
         val progressPercentage = ((totalDistance / weeklyGoal) * 100).toInt().coerceAtMost(100)
 
-        binding.circularProgressBar.progress = progressPercentage
+        binding.circularProgressBar.progress = progressPercentage.toFloat()
         binding.progressPercentageText.text = "$progressPercentage%"
     }
 

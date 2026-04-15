@@ -1,228 +1,324 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:background="@color/bg_primary"
+    android:fillViewport="true">
 
-
-    <!-- Top Bar -->
     <LinearLayout
-        android:id="@+id/topBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        android:orientation="vertical"
+        android:paddingBottom="24dp">
 
-        <!-- App Title and Subtitle -->
+        <!-- ═══ HEADER ═══ -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="12dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="FUNRUN"
+                    android:textColor="@color/accent_lime"
+                    android:textSize="24sp"
+                    android:letterSpacing="0.12"
+                    android:textStyle="bold"
+                    android:fontFamily="sans-serif-condensed" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Go farther &amp; faster"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="11sp" />
+
+            </LinearLayout>
+
+            <!-- Header action buttons -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:id="@+id/settingsIcon"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_settings"
+                    android:padding="10dp"
+                    android:background="@drawable/bg_icon_button"
+                    android:tint="@color/text_secondary"
+                    android:contentDescription="Settings" />
+
+                <ImageView
+                    android:id="@+id/addIcon"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_add"
+                    android:padding="10dp"
+                    android:background="@drawable/bg_add_button"
+                    android:tint="@color/bg_primary"
+                    android:layout_marginStart="10dp"
+                    android:contentDescription="Add run" />
+
+            </LinearLayout>
+        </RelativeLayout>
+
+        <!-- ═══ PROGRESS RING SECTION ═══ -->
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp">
 
             <TextView
-                android:id="@+id/appTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="FunRun"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                android:textColor="#FF6200EE" />
+                android:text="WEEKLY GOAL"
+                android:textColor="@color/text_secondary"
+                android:textSize="10sp"
+                android:letterSpacing="0.25"
+                android:layout_marginBottom="16dp" />
 
-            <TextView
-                android:id="@+id/appSubtitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Go farther &amp; faster"
-                android:textSize="14sp"
-                android:textStyle="italic"
-                android:textColor="#888888"
-                android:layout_marginTop="2dp" />
+            <!-- Progress ring with overlaid text -->
+            <FrameLayout
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_gravity="center_horizontal">
+
+                <com.mikhaellopez.circularprogressbar.CircularProgressBar
+                    android:id="@+id/circularProgressBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:cpb_progressbar_color="@color/accent_lime"
+                    app:cpb_progressbar_width="14dp"
+                    app:cpb_background_progressbar_color="@color/bg_card"
+                    app:cpb_background_progressbar_width="14dp"
+                    app:cpb_round_border="true"
+                    app:cpb_progress="0"
+                    app:cpb_progress_direction="to_right" />
+
+                <!-- Centered text overlay -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/progressPercentageText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0%"
+                        android:textColor="@color/text_primary"
+                        android:textSize="44sp"
+                        android:textStyle="bold"
+                        android:fontFamily="sans-serif-condensed"
+                        android:lineSpacingMultiplier="0.9" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="of goal"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="11sp" />
+
+                </LinearLayout>
+            </FrameLayout>
+
         </LinearLayout>
 
-        <!-- Settings Icon -->
-        <ImageView
-            android:id="@+id/settingsIcon"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_gravity="center_vertical"
-            android:clickable="true"
-            android:contentDescription="Settings"
-            android:focusable="true"
-            android:src="@drawable/ic_settings"
-            app:tint="#000000"
-            tools:ignore="TouchTargetSizeCheck" />
-        <ImageView
-            android:id="@+id/addIcon"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_gravity="center_vertical"
-            android:clickable="true"
-            android:contentDescription="ADD"
-            android:focusable="true"
-            android:src="@drawable/ic_add"
-            app:tint="#000000"
-            tools:ignore="TouchTargetSizeCheck" />
+        <!-- ═══ SECTION HEADER ═══ -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="20dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="14dp">
+
+            <View
+                android:layout_width="3dp"
+                android:layout_height="14dp"
+                android:background="@color/accent_lime"
+                android:layout_marginEnd="10dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="YOUR BEST THIS WEEK"
+                android:textColor="@color/text_secondary"
+                android:textSize="10sp"
+                android:letterSpacing="0.2"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <!-- ═══ STATS CARDS ═══ -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp">
+
+            <!-- Longest Distance — full width card -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_card"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="20dp"
+                android:layout_marginBottom="10dp">
+
+                <!-- Lime accent bar -->
+                <View
+                    android:layout_width="3dp"
+                    android:layout_height="44dp"
+                    android:background="@drawable/bg_accent_bar"
+                    android:layout_marginEnd="16dp" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="LONGEST DISTANCE"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="9sp"
+                        android:letterSpacing="0.2" />
+
+                    <TextView
+                        android:id="@+id/longestDistanceValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0.0 km"
+                        android:textColor="@color/text_primary"
+                        android:textSize="34sp"
+                        android:textStyle="bold"
+                        android:fontFamily="sans-serif-condensed"
+                        android:lineSpacingMultiplier="0.95" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🏃"
+                    android:textSize="28sp" />
+
+            </LinearLayout>
+
+            <!-- Bottom row: Best Pace + Longest Duration side by side -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <!-- Best Pace -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_card"
+                    android:orientation="vertical"
+                    android:padding="18dp"
+                    android:layout_marginEnd="5dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="BEST PACE"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="9sp"
+                        android:letterSpacing="0.2" />
+
+                    <TextView
+                        android:id="@+id/bestPaceValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0.0"
+                        android:textColor="@color/accent_lime"
+                        android:textSize="30sp"
+                        android:textStyle="bold"
+                        android:fontFamily="sans-serif-condensed"
+                        android:layout_marginTop="2dp"
+                        android:lineSpacingMultiplier="0.9" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="min/km"
+                        android:textColor="@color/text_muted"
+                        android:textSize="10sp" />
+
+                </LinearLayout>
+
+                <!-- Longest Duration -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_card"
+                    android:orientation="vertical"
+                    android:padding="18dp"
+                    android:layout_marginStart="5dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="LONGEST RUN"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="9sp"
+                        android:letterSpacing="0.2" />
+
+                    <TextView
+                        android:id="@+id/longestDurationValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textColor="@color/accent_lime"
+                        android:textSize="30sp"
+                        android:textStyle="bold"
+                        android:fontFamily="sans-serif-condensed"
+                        android:layout_marginTop="2dp"
+                        android:lineSpacingMultiplier="0.9" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="minutes"
+                        android:textColor="@color/text_muted"
+                        android:textSize="10sp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
 
     </LinearLayout>
 
-    <!-- Circular Progress Bar -->
-    <TextView
-        android:id="@+id/titleTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Your Best Records This Week"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.479" />
-
-    <FrameLayout
-        android:id="@+id/progressBarContainer"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_marginTop="100dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <!-- Circular Progress Bar -->
-
-        <!-- Text in the center of the progress bar -->
-        <ProgressBar
-            android:id="@+id/circularProgressBar"
-            style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:indeterminateOnly="false"
-            android:max="100"
-            android:progress="0"
-            android:progressDrawable="@drawable/circular_progress_bar" />
-
-        <TextView
-            android:id="@+id/progressPercentageText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="0%"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-    </FrameLayout>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/longestDistanceCard"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="4dp"
-        app:layout_constraintTop_toBottomOf="@id/titleTextView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <TextView
-                android:id="@+id/longestDistanceTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Longest Distance"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/longestDistanceValue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0.0 km"
-                android:textSize="16sp"
-                android:layout_marginTop="8dp" />
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-
-    <!-- Card for Best Pace -->
-    <androidx.cardview.widget.CardView
-        android:id="@+id/bestPaceCard"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="4dp"
-        app:layout_constraintTop_toBottomOf="@id/longestDistanceCard"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <TextView
-                android:id="@+id/bestPaceTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Best Pace"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/bestPaceValue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0.0 min/km"
-                android:textSize="16sp"
-                android:layout_marginTop="8dp" />
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-
-    <!-- Card for Longest Duration -->
-    <androidx.cardview.widget.CardView
-        android:id="@+id/longestDurationCard"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="4dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/bestPaceCard">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <TextView
-                android:id="@+id/longestDurationTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Longest Duration"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/longestDurationValue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="0 min"
-                android:textSize="16sp" />
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

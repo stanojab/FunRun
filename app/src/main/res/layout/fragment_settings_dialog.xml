@@ -1,65 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:background="@color/bg_card"
+    android:padding="24dp">
 
-    <!-- Settings Title -->
+    <!-- Dialog title -->
     <TextView
-        android:id="@+id/settingsTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Settings"
-        android:textSize="20sp"
+        android:text="SETTINGS"
+        android:textColor="@color/text_primary"
+        android:textSize="18sp"
         android:textStyle="bold"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="16dp" />
+        android:fontFamily="sans-serif-condensed"
+        android:letterSpacing="0.1"
+        android:layout_marginBottom="24dp" />
 
-    <!-- Dark Mode Toggle -->
+    <!-- Dark mode row -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="56dp"
         android:orientation="horizontal"
-        android:layout_marginBottom="16dp">
+        android:gravity="center_vertical"
+        android:background="@drawable/bg_card"
+        android:paddingHorizontal="16dp"
+        android:layout_marginBottom="12dp">
 
-        <TextView
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Dark Mode"
-            android:textSize="16sp"
-            android:layout_gravity="center_vertical" />
+            android:orientation="vertical">
 
-        <Switch
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Dark Mode"
+                android:textColor="@color/text_primary"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Toggle app dark theme"
+                android:textColor="@color/text_secondary"
+                android:textSize="11sp" />
+
+        </LinearLayout>
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/darkModeSwitch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:ignore="TouchTargetSizeCheck" />
+            android:thumbTint="@color/bg_primary"
+            android:trackTint="@color/accent_lime" />
+
     </LinearLayout>
 
-    <!-- Weekly Goal Input -->
+    <!-- Weekly goal row -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        android:background="@drawable/bg_card"
+        android:padding="16dp">
 
         <TextView
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Weekly Goal (km)"
-            android:textSize="16sp"
-            android:layout_gravity="center_vertical" />
+            android:text="Weekly Goal"
+            android:textColor="@color/text_primary"
+            android:textSize="14sp"
+            android:layout_marginBottom="2dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Distance target in km"
+            android:textColor="@color/text_secondary"
+            android:textSize="11sp"
+            android:layout_marginBottom="10dp" />
 
         <EditText
             android:id="@+id/weeklyGoalInput"
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:hint="50"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="50.0"
+            android:textColorHint="@color/text_muted"
+            android:textColor="@color/text_primary"
+            android:textSize="15sp"
             android:inputType="numberDecimal"
-            tools:ignore="TouchTargetSizeCheck" />
+            android:background="@drawable/bg_input_field"
+            android:paddingHorizontal="14dp" />
+
     </LinearLayout>
+
 </LinearLayout>

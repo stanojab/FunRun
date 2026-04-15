@@ -27,10 +27,11 @@ class RunAdapter(private val runs: List<Run>) : RecyclerView.Adapter<RunAdapter.
 
     override fun onBindViewHolder(holder: RunViewHolder, position: Int) {
         val run = runs[position]
-        holder.tvDistance.text = "Distance: ${"%.2f".format(run.distance)} km"
-        holder.tvDuration.text = "Duration: ${formatDuration(run.duration)}"
-        holder.tvPace.text = "Pace: ${"%.2f".format(run.pace)} km/h"
-        holder.tvTimestamp.text = "Date: ${formatTimestamp(run.timestamp)}"
+        // NOTE: No "Distance: " prefix here — the layout labels handle that via separate TextViews
+        holder.tvDistance.text = "${"%.2f".format(run.distance)} km"
+        holder.tvDuration.text = formatDuration(run.duration)
+        holder.tvPace.text = "${"%.2f".format(run.pace)} km/h"
+        holder.tvTimestamp.text = formatTimestamp(run.timestamp)
     }
 
     override fun getItemCount(): Int = runs.size
@@ -44,7 +45,7 @@ class RunAdapter(private val runs: List<Run>) : RecyclerView.Adapter<RunAdapter.
 
     private fun formatTimestamp(timestamp: Long): String {
         val date = Date(timestamp)
-        val format = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+        val format = SimpleDateFormat("MMM dd, yyyy · HH:mm", Locale.getDefault())
         return format.format(date)
     }
 }

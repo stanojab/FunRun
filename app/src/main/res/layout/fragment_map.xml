@@ -1,85 +1,161 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/bg_primary">
 
-    <androidx.fragment.app.FragmentContainerView
+    <!-- Full-screen map -->
+    <fragment
         android:id="@+id/mapFragment"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/statsCardView"
-        android:layout_width="0dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="50dp"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="4dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- Stats overlay at the top -->
+    <LinearLayout
+        android:id="@+id/statsOverlay"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_map_stats_overlay"
+        android:orientation="horizontal"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="48dp"
+        android:paddingBottom="20dp"
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Duration stat -->
         <LinearLayout
-            android:id="@+id/statsLayout"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:background="#80000000"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:padding="10dp"
-            android:weightSum="3">
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="DURATION"
+                android:textColor="@color/text_secondary"
+                android:textSize="9sp"
+                android:letterSpacing="0.2" />
 
             <TextView
                 android:id="@+id/tvDuration"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="Duration: 00:00"
-                android:textColor="#FFFFFF"
-                android:textSize="16sp" />
+                android:text="00:00"
+                android:textColor="@color/text_primary"
+                android:textSize="26sp"
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-condensed" />
+
+        </LinearLayout>
+
+        <!-- Vertical divider -->
+        <View
+            android:layout_width="1dp"
+            android:layout_height="36dp"
+            android:background="@color/stroke"
+            android:layout_marginHorizontal="8dp" />
+
+        <!-- Distance stat -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="DISTANCE"
+                android:textColor="@color/text_secondary"
+                android:textSize="9sp"
+                android:letterSpacing="0.2" />
 
             <TextView
                 android:id="@+id/tvDistance"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="Distance: 0.00 km"
-                android:textColor="#FFFFFF"
-                android:textSize="16sp" />
+                android:text="0.00 km"
+                android:textColor="@color/accent_lime"
+                android:textSize="26sp"
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-condensed" />
+
+        </LinearLayout>
+
+        <!-- Vertical divider -->
+        <View
+            android:layout_width="1dp"
+            android:layout_height="36dp"
+            android:background="@color/stroke"
+            android:layout_marginHorizontal="8dp" />
+
+        <!-- Pace stat -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PACE"
+                android:textColor="@color/text_secondary"
+                android:textSize="9sp"
+                android:letterSpacing="0.2" />
 
             <TextView
                 android:id="@+id/tvPace"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="Pace: 0:00 min/km"
-                android:textColor="#FFFFFF"
-                android:textSize="16sp" />
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
+                android:text="0.00"
+                android:textColor="@color/text_primary"
+                android:textSize="26sp"
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-condensed" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="km/h"
+                android:textColor="@color/text_muted"
+                android:textSize="9sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Start / Stop button at the bottom -->
     <Button
         android:id="@+id/startRunButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="180dp"
-        android:padding="10dp"
-        android:text="Start"
+        android:layout_width="200dp"
+        android:layout_height="56dp"
+        android:text="START RUN"
+        android:textColor="@color/bg_primary"
+        android:textSize="15sp"
+        android:letterSpacing="0.12"
+        android:textStyle="bold"
+        android:fontFamily="sans-serif-condensed"
+        android:background="@drawable/bg_start_button"
+        android:elevation="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_marginBottom="32dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

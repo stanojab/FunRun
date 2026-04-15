@@ -1,30 +1,90 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:background="@color/bg_card"
+    android:padding="24dp">
+
+    <!-- Dialog title -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="LOG A RUN"
+        android:textColor="@color/text_primary"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:fontFamily="sans-serif-condensed"
+        android:letterSpacing="0.1"
+        android:layout_marginBottom="20dp" />
+
+    <!-- Distance input -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="DISTANCE"
+        android:textColor="@color/text_secondary"
+        android:textSize="9sp"
+        android:letterSpacing="0.2"
+        android:layout_marginBottom="6dp" />
 
     <EditText
         android:id="@+id/etDistance"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Distance (km)"
+        android:layout_height="48dp"
+        android:hint="km"
+        android:textColorHint="@color/text_muted"
+        android:textColor="@color/text_primary"
+        android:textSize="15sp"
         android:inputType="numberDecimal"
-        android:minHeight="48dp" />
+        android:background="@drawable/bg_input_field"
+        android:paddingHorizontal="14dp"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Duration input -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="DURATION"
+        android:textColor="@color/text_secondary"
+        android:textSize="9sp"
+        android:letterSpacing="0.2"
+        android:layout_marginBottom="6dp" />
 
     <EditText
         android:id="@+id/etDuration"
         android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:hint="milliseconds"
+        android:textColorHint="@color/text_muted"
+        android:textColor="@color/text_primary"
+        android:textSize="15sp"
+        android:inputType="numberDecimal"
+        android:background="@drawable/bg_input_field"
+        android:paddingHorizontal="14dp"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Pace input -->
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="Duration (ms)"
-        android:inputType="number"
-        android:minHeight="48dp" />
+        android:text="PACE"
+        android:textColor="@color/text_secondary"
+        android:textSize="9sp"
+        android:letterSpacing="0.2"
+        android:layout_marginBottom="6dp" />
 
     <EditText
         android:id="@+id/etPace"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Pace (km/h)"
+        android:layout_height="48dp"
+        android:hint="km/h"
+        android:textColorHint="@color/text_muted"
+        android:textColor="@color/text_primary"
+        android:textSize="15sp"
         android:inputType="numberDecimal"
-        android:minHeight="48dp" />
+        android:background="@drawable/bg_input_field"
+        android:paddingHorizontal="14dp" />
+
 </LinearLayout>

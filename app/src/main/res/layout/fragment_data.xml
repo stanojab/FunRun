@@ -1,22 +1,46 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="8dp">
+    android:background="@color/bg_primary">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Your Runs"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:layout_gravity="center"
-        android:paddingBottom="8dp" />
+    <!-- Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="20dp"
+        android:paddingTop="12dp">
 
+        <View
+            android:layout_width="3dp"
+            android:layout_height="20dp"
+            android:background="@color/accent_lime"
+            android:layout_marginEnd="12dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="RUN HISTORY"
+            android:textColor="@color/text_primary"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-condensed"
+            android:letterSpacing="0.08" />
+
+    </LinearLayout>
+
+    <!-- Run list -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewRuns"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:dividerHeight="8dp"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="16dp"
         android:clipToPadding="false" />
+
 </LinearLayout>
