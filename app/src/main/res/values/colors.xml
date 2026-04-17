@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Backgrounds -->
-    <color name="bg_primary">#0D0D14</color>
-    <color name="bg_surface">#13131E</color>
-    <color name="bg_card">#1A1A28</color>
-    <color name="bg_card_elevated">#22223A</color>
+    <!-- Backgrounds - LIGHT -->
+    <color name="bg_primary">#F4F4F8</color>
+    <color name="bg_surface">#FFFFFF</color>
+    <color name="bg_card">#FFFFFF</color>
+    <color name="bg_card_elevated">#EFEFEF</color>
 
-    <!-- Accent -->
-    <color name="accent_lime">#B8FF00</color>
-    <color name="accent_lime_alpha">#33B8FF00</color>
+    <!-- Accent - same in both modes -->
+    <color name="accent_lime">#5DB800</color>
+    <color name="accent_lime_alpha">#335DB800</color>
     <color name="accent_red">#FF4757</color>
     <color name="accent_red_alpha">#33FF4757</color>
 
-    <!-- Text -->
-    <color name="text_primary">#FFFFFF</color>
-    <color name="text_secondary">#6E6E8A</color>
-    <color name="text_muted">#36364A</color>
+    <!-- Text - LIGHT -->
+    <color name="text_primary">#0D0D14</color>
+    <color name="text_secondary">#7A7A9A</color>
+    <color name="text_muted">#BBBBCC</color>
 
-    <!-- UI -->
-    <color name="stroke">#22223A</color>
-    <color name="divider">#1A1A28</color>
+    <!-- UI - LIGHT -->
+    <color name="stroke">#E0E0EE</color>
+    <color name="divider">#F0F0F8</color>
 
-    <!-- Nav -->
-    <color name="nav_bg">#0D0D14</color>
-    <color name="nav_selected">#B8FF00</color>
-    <color name="nav_unselected">#3A3A55</color>
+    <!-- Nav - LIGHT -->
+    <color name="nav_bg">#FFFFFF</color>
+    <color name="nav_selected">#5DB800</color>
+    <color name="nav_unselected">#AAAACC</color>
 </resources>
