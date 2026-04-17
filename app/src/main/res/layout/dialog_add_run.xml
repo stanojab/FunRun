@@ -46,7 +46,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="DURATION"
+        android:text="DURATION (MINUTES)"
         android:textColor="@color/text_secondary"
         android:textSize="9sp"
         android:letterSpacing="0.2"
@@ -56,7 +56,7 @@
         android:id="@+id/etDuration"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:hint="milliseconds"
+        android:hint="minutes (e.g. 30)"
         android:textColorHint="@color/text_muted"
         android:textColor="@color/text_primary"
         android:textSize="15sp"

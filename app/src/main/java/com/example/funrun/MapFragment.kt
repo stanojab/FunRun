@@ -7,36 +7,22 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import android.location.Location
 import android.os.Bundle
 import android.os.CountDownTimer
 import androidx.fragment.app.Fragment
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import com.example.runlibrary.Run
-import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [MapFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class MapFragment : Fragment(R.layout.fragment_map),  OnMapReadyCallback, SensorEventListener {
+class MapFragment : Fragment(R.layout.fragment_map), OnMapReadyCallback, SensorEventListener {
 
     private lateinit var googleMap: GoogleMap
     private lateinit var startButton: Button
@@ -45,26 +31,22 @@ class MapFragment : Fragment(R.layout.fragment_map),  OnMapReadyCallback, Sensor
     private lateinit var tvDistance: TextView
 
     private var isRunning = false
-    private var startTime = System.currentTimeMillis()
+    private var startTime = 0L
     private var totalSteps = 0
     private var initialStepCount = 0
     private var isInitialStepSet = false
-
     private var timer: CountDownTimer? = null
 
     private val locationClient by lazy { LocationServices.getFusedLocationProviderClient(requireContext()) }
     private lateinit var sensorManager: SensorManager
     private var stepSensor: Sensor? = null
 
-    companion object {
-        private const val LOCATION_PERMISSION_REQUEST_CODE = 1001
-    }
+    // Average stride length in km (0.78 metres per step)
+    private val STRIDE_LENGTH_KM = 0.00078
 
     private val locationPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-            if (isGranted) {
-                enableLocationAndMoveCamera()
-            }
+            if (isGranted) enableLocationAndMoveCamera()
         }
 
     override fun onViewCreated(view: android.view.View, savedInstanceState: Bundle?) {
@@ -82,11 +64,7 @@ class MapFragment : Fragment(R.layout.fragment_map),  OnMapReadyCallback, Sensor
         stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
 
         startButton.setOnClickListener {
-            if (isRunning) {
-                stopRun()
-            } else {
-                startRun()
-            }
+            if (isRunning) stopRun() else startRun()
         }
     }
 
@@ -97,8 +75,7 @@ class MapFragment : Fragment(R.layout.fragment_map),  OnMapReadyCallback, Sensor
 
     private fun checkAndRequestLocationPermission() {
         if (ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
+                requireContext(), Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
         ) {
             enableLocationAndMoveCamera()
@@ -109,8 +86,7 @@ class MapFragment : Fragment(R.layout.fragment_map),  OnMapReadyCallback, Sensor
 
     private fun enableLocationAndMoveCamera() {
         if (ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
+                requireContext(), Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
         ) {
             googleMap.isMyLocationEnabled = true
@@ -125,9 +101,9 @@ class MapFragment : Fragment(R.layout.fragment_map),  OnMapReadyCallback, Sensor
 
     private fun startRun() {
         isRunning = true
-        startButton.text = "Stop Run"
+        startButton.text = "STOP RUN"
+        startButton.setBackgroundResource(R.drawable.bg_stop_button)
         startTime = System.currentTimeMillis()
-
         isInitialStepSet = false
         totalSteps = 0
 
@@ -135,45 +111,55 @@ class MapFragment : Fragment(R.layout.fragment_map),  OnMapReadyCallback, Sensor
 
         timer = object : CountDownTimer(Long.MAX_VALUE, 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                val elapsedTime = System.currentTimeMillis() - startTime
-                val seconds = (elapsedTime / 1000) % 60
-                val minutes = (elapsedTime / (1000 * 60)) % 60
-
-                val durationText = String.format("%02d:%02d", minutes, seconds)
-                tvDuration.text = "Duration: $durationText"
-
-                updatePace()
+                val elapsed = System.currentTimeMillis() - startTime
+                val seconds = (elapsed / 1000) % 60
+                val minutes = (elapsed / 60000) % 60
+                val hours = elapsed / 3600000
+                tvDuration.text = if (hours > 0)
+                    "%02d:%02d:%02d".format(hours, minutes, seconds)
+                else
+                    "%02d:%02d".format(minutes, seconds)
+                updateStats()
             }
-
             override fun onFinish() {}
         }.start()
     }
 
     private fun stopRun() {
         isRunning = false
-        startButton.text = "Start Run"
+        startButton.text = "START RUN"
+        startButton.setBackgroundResource(R.drawable.bg_start_button)
         timer?.cancel()
-
         sensorManager.unregisterListener(this)
 
-        val elapsedTime = System.currentTimeMillis() - startTime
-        val pace = if (elapsedTime > 0) (totalSteps / 1000.0) / (elapsedTime / 1000.0 / 3600.0) else 0.0
+        val elapsedMs = System.currentTimeMillis() - startTime
+        val distanceKm = totalSteps * STRIDE_LENGTH_KM
+        val elapsedHours = elapsedMs / 3600000.0
+        // Pace = km / hours = km/h
+        val pace = if (elapsedHours > 0) distanceKm / elapsedHours else 0.0
 
         val run = Run(
             pace = pace,
-            duration = elapsedTime,
-            distance = totalSteps / 1.0,
+            duration = elapsedMs,
+            distance = distanceKm,
             timestamp = System.currentTimeMillis()
         )
-
         (requireActivity().application as MyApplication).addRun(run)
+
+        // Reset display
+        tvDuration.text = "00:00"
+        tvDistance.text = "0.00 km"
+        tvPace.text = "0.00"
     }
 
-    private fun updatePace() {
-        val elapsedTime = System.currentTimeMillis() - startTime
-        val pace = if (elapsedTime > 0) (totalSteps / 1000.0) / (elapsedTime / 1000.0 / 3600.0) else 0.0
-        tvPace.text = "Pace: ${"%.2f".format(pace)} km/h"
-        tvDistance.text = "Distance: ${"%.2f".format(totalSteps / 1000.0)} km"
+    private fun updateStats() {
+        val elapsedMs = System.currentTimeMillis() - startTime
+        val distanceKm = totalSteps * STRIDE_LENGTH_KM
+        val elapsedHours = elapsedMs / 3600000.0
+        val pace = if (elapsedHours > 0) distanceKm / elapsedHours else 0.0
+
+        tvDistance.text = "%.2f km".format(distanceKm)
+        tvPace.text = "%.2f".format(pace)
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
@@ -188,6 +174,10 @@ class MapFragment : Fragment(R.layout.fragment_map),  OnMapReadyCallback, Sensor
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        timer?.cancel()
+        if (isRunning) sensorManager.unregisterListener(this)
+    }
 }
-
-
