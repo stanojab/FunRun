@@ -30,7 +30,7 @@ class RunAdapter(private val runs: List<Run>) : RecyclerView.Adapter<RunAdapter.
         // NOTE: No "Distance: " prefix here — the layout labels handle that via separate TextViews
         holder.tvDistance.text = "${"%.2f".format(run.distance)} km"
         holder.tvDuration.text = formatDuration(run.duration)
-        holder.tvPace.text = "${"%.2f".format(run.pace)} km/h"
+        holder.tvPace.text = "${"%.2f".format(run.pace)} min/km"
         holder.tvTimestamp.text = formatTimestamp(run.timestamp)
     }
 

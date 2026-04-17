@@ -1,183 +1,272 @@
 package com.example.funrun
 
-import android.content.pm.PackageManager
 import android.Manifest
+import android.content.pm.PackageManager
 import android.content.Context
+import android.graphics.Color
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.location.Location
 import android.os.Bundle
 import android.os.CountDownTimer
-import androidx.fragment.app.Fragment
+import android.os.Looper
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import com.example.runlibrary.Run
-import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.PolylineOptions
 
-class MapFragment : Fragment(R.layout.fragment_map), OnMapReadyCallback, SensorEventListener {
+class MapFragment : Fragment(R.layout.fragment_map), OnMapReadyCallback {
 
+    // ─── UI ───────────────────────────────────────────────────────────────────
     private lateinit var googleMap: GoogleMap
     private lateinit var startButton: Button
     private lateinit var tvPace: TextView
     private lateinit var tvDuration: TextView
     private lateinit var tvDistance: TextView
 
+    // ─── State ────────────────────────────────────────────────────────────────
     private var isRunning = false
     private var startTime = 0L
-    private var totalSteps = 0
-    private var initialStepCount = 0
-    private var isInitialStepSet = false
+    private var totalDistanceMeters = 0f
+    private var lastLocation: Location? = null
+    private val routePoints = mutableListOf<LatLng>()
+
+    // ─── Timer ────────────────────────────────────────────────────────────────
     private var timer: CountDownTimer? = null
 
-    private val locationClient by lazy { LocationServices.getFusedLocationProviderClient(requireContext()) }
-    private lateinit var sensorManager: SensorManager
-    private var stepSensor: Sensor? = null
+    // ─── GPS ──────────────────────────────────────────────────────────────────
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var locationCallback: LocationCallback
 
-    // Average stride length in km (0.78 metres per step)
-    private val STRIDE_LENGTH_KM = 0.00078
+    private val locationRequest = LocationRequest.Builder(
+        Priority.PRIORITY_HIGH_ACCURACY,
+        2000L           // update every 2 seconds
+    ).apply {
+        setMinUpdateIntervalMillis(1000L)       // no faster than 1 s
+        setMinUpdateDistanceMeters(2f)          // only if moved ≥ 2 m
+        setWaitForAccurateLocation(false)
+    }.build()
 
+    // ─── Permissions ──────────────────────────────────────────────────────────
     private val locationPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-            if (isGranted) enableLocationAndMoveCamera()
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+            if (granted) enableMyLocation()
         }
 
-    override fun onViewCreated(view: android.view.View, savedInstanceState: Bundle?) {
+    // ─────────────────────────────────────────────────────────────────────────
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         startButton = view.findViewById(R.id.startRunButton)
-        tvPace = view.findViewById(R.id.tvPace)
+        tvPace     = view.findViewById(R.id.tvPace)
         tvDuration = view.findViewById(R.id.tvDuration)
         tvDistance = view.findViewById(R.id.tvDistance)
 
-        val mapFragment = childFragmentManager.findFragmentById(R.id.mapFragment) as SupportMapFragment
-        mapFragment.getMapAsync(this)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
 
-        sensorManager = requireContext().getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
+        // Build the location callback once
+        locationCallback = object : LocationCallback() {
+            override fun onLocationResult(result: LocationResult) {
+                result.lastLocation?.let { onNewLocation(it) }
+            }
+        }
+
+        val mapFragment = childFragmentManager
+            .findFragmentById(R.id.mapFragment) as SupportMapFragment
+        mapFragment.getMapAsync(this)
 
         startButton.setOnClickListener {
             if (isRunning) stopRun() else startRun()
         }
     }
 
+    // ─── Map ready ────────────────────────────────────────────────────────────
     override fun onMapReady(map: GoogleMap) {
         googleMap = map
-        checkAndRequestLocationPermission()
+        googleMap.uiSettings.isMyLocationButtonEnabled = true
+        checkPermissionAndInit()
     }
 
-    private fun checkAndRequestLocationPermission() {
-        if (ContextCompat.checkSelfPermission(
-                requireContext(), Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            enableLocationAndMoveCamera()
+    private fun checkPermissionAndInit() {
+        if (hasLocationPermission()) {
+            enableMyLocation()
         } else {
             locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         }
     }
 
-    private fun enableLocationAndMoveCamera() {
-        if (ContextCompat.checkSelfPermission(
-                requireContext(), Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            googleMap.isMyLocationEnabled = true
-            locationClient.lastLocation.addOnSuccessListener { location ->
-                location?.let {
-                    val latLng = LatLng(it.latitude, it.longitude)
-                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
-                }
+    private fun hasLocationPermission() = ContextCompat.checkSelfPermission(
+        requireContext(), Manifest.permission.ACCESS_FINE_LOCATION
+    ) == PackageManager.PERMISSION_GRANTED
+
+    private fun enableMyLocation() {
+        if (!hasLocationPermission()) return
+        googleMap.isMyLocationEnabled = true
+
+        // Centre map on last known location
+        fusedLocationClient.lastLocation.addOnSuccessListener { loc ->
+            loc?.let {
+                googleMap.animateCamera(
+                    CameraUpdateFactory.newLatLngZoom(LatLng(it.latitude, it.longitude), 16f)
+                )
             }
         }
     }
 
+    // ─── Run control ──────────────────────────────────────────────────────────
     private fun startRun() {
-        isRunning = true
+        if (!hasLocationPermission()) {
+            locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+            return
+        }
+
+        isRunning           = true
+        startTime           = System.currentTimeMillis()
+        totalDistanceMeters = 0f
+        lastLocation        = null
+        routePoints.clear()
+
         startButton.text = "STOP RUN"
         startButton.setBackgroundResource(R.drawable.bg_stop_button)
-        startTime = System.currentTimeMillis()
-        isInitialStepSet = false
-        totalSteps = 0
 
-        sensorManager.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_UI)
-
-        timer = object : CountDownTimer(Long.MAX_VALUE, 1000) {
-            override fun onTick(millisUntilFinished: Long) {
-                val elapsed = System.currentTimeMillis() - startTime
-                val seconds = (elapsed / 1000) % 60
-                val minutes = (elapsed / 60000) % 60
-                val hours = elapsed / 3600000
-                tvDuration.text = if (hours > 0)
-                    "%02d:%02d:%02d".format(hours, minutes, seconds)
-                else
-                    "%02d:%02d".format(minutes, seconds)
-                updateStats()
-            }
-            override fun onFinish() {}
-        }.start()
+        startLocationUpdates()
+        startTimer()
     }
 
     private fun stopRun() {
         isRunning = false
         startButton.text = "START RUN"
         startButton.setBackgroundResource(R.drawable.bg_start_button)
+
+        stopLocationUpdates()
         timer?.cancel()
-        sensorManager.unregisterListener(this)
 
-        val elapsedMs = System.currentTimeMillis() - startTime
-        val distanceKm = totalSteps * STRIDE_LENGTH_KM
-        val elapsedHours = elapsedMs / 3600000.0
-        // Pace = km / hours = km/h
-        val pace = if (elapsedHours > 0) distanceKm / elapsedHours else 0.0
-
-        val run = Run(
-            pace = pace,
-            duration = elapsedMs,
-            distance = distanceKm,
-            timestamp = System.currentTimeMillis()
-        )
-        (requireActivity().application as MyApplication).addRun(run)
+        saveRun()
 
         // Reset display
         tvDuration.text = "00:00"
         tvDistance.text = "0.00 km"
-        tvPace.text = "0.00"
+        tvPace.text     = "0.00"
     }
 
-    private fun updateStats() {
-        val elapsedMs = System.currentTimeMillis() - startTime
-        val distanceKm = totalSteps * STRIDE_LENGTH_KM
-        val elapsedHours = elapsedMs / 3600000.0
-        val pace = if (elapsedHours > 0) distanceKm / elapsedHours else 0.0
+    // ─── Location updates ─────────────────────────────────────────────────────
+    private fun startLocationUpdates() {
+        if (!hasLocationPermission()) return
+        fusedLocationClient.requestLocationUpdates(
+            locationRequest,
+            locationCallback,
+            Looper.getMainLooper()
+        )
+    }
 
+    private fun stopLocationUpdates() {
+        fusedLocationClient.removeLocationUpdates(locationCallback)
+    }
+
+    // Called on every GPS fix while running
+    private fun onNewLocation(location: Location) {
+        // Ignore inaccurate fixes (> 20 m accuracy)
+        if (location.accuracy > 20f) return
+
+        val newPoint = LatLng(location.latitude, location.longitude)
+
+        // Accumulate distance
+        lastLocation?.let { prev ->
+            val delta = prev.distanceTo(location)    // metres
+            if (delta > 1f) {                        // ignore GPS jitter < 1 m
+                totalDistanceMeters += delta
+            }
+        }
+        lastLocation = location
+
+        // Draw route
+        routePoints.add(newPoint)
+        redrawRoute()
+
+        // Follow the runner
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(newPoint, 17f))
+
+        updateStatsDisplay()
+    }
+
+    // ─── Route drawing ────────────────────────────────────────────────────────
+    private fun redrawRoute() {
+        if (routePoints.size < 2) return
+        googleMap.addPolyline(
+            PolylineOptions()
+                .addAll(routePoints)
+                .color(Color.parseColor("#B8FF00"))
+                .width(14f)
+                .geodesic(true)
+        )
+    }
+
+    // ─── Timer ────────────────────────────────────────────────────────────────
+    private fun startTimer() {
+        timer = object : CountDownTimer(Long.MAX_VALUE, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                updateStatsDisplay()
+            }
+            override fun onFinish() {}
+        }.start()
+    }
+
+    // ─── Stats display ────────────────────────────────────────────────────────
+    private fun updateStatsDisplay() {
+        val elapsedMs  = System.currentTimeMillis() - startTime
+        val distanceKm = totalDistanceMeters / 1000.0
+
+        // Duration
+        val totalSeconds = elapsedMs / 1000
+        val hours   = totalSeconds / 3600
+        val minutes = (totalSeconds % 3600) / 60
+        val seconds = totalSeconds % 60
+        tvDuration.text = if (hours > 0)
+            "%02d:%02d:%02d".format(hours, minutes, seconds)
+        else
+            "%02d:%02d".format(minutes, seconds)
+
+        // Distance
         tvDistance.text = "%.2f km".format(distanceKm)
+
+        // Pace: min/km  (elapsedMinutes / km)
+        val elapsedMinutes = elapsedMs / 60000.0
+        val pace = if (distanceKm > 0.01) elapsedMinutes / distanceKm else 0.0
         tvPace.text = "%.2f".format(pace)
     }
 
-    override fun onSensorChanged(event: SensorEvent?) {
-        if (event?.sensor?.type == Sensor.TYPE_STEP_COUNTER) {
-            val stepCount = event.values[0].toInt()
-            if (!isInitialStepSet) {
-                initialStepCount = stepCount
-                isInitialStepSet = true
-            }
-            totalSteps = stepCount - initialStepCount
-        }
+    // ─── Save run ─────────────────────────────────────────────────────────────
+    private fun saveRun() {
+        val elapsedMs  = System.currentTimeMillis() - startTime
+        val distanceKm = totalDistanceMeters / 1000.0
+        val elapsedMinutes = elapsedMs / 60000.0
+        val pace = if (distanceKm > 0.01) elapsedMinutes / distanceKm else 0.0
+
+        val run = Run(
+            pace      = pace,
+            duration  = elapsedMs,
+            distance  = distanceKm,
+            timestamp = System.currentTimeMillis()
+        )
+        (requireActivity().application as MyApplication).addRun(run)
     }
 
-    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
-
+    // ─── Lifecycle ────────────────────────────────────────────────────────────
     override fun onDestroyView() {
         super.onDestroyView()
         timer?.cancel()
-        if (isRunning) sensorManager.unregisterListener(this)
+        if (isRunning) stopLocationUpdates()
     }
 }
