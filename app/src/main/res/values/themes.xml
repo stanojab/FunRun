@@ -1,6 +1,5 @@
 <resources>
-
-    <style name="Theme.FunRun" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.FunRun" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorPrimary">@color/accent_lime</item>
         <item name="colorPrimaryVariant">@color/bg_surface</item>
         <item name="colorOnPrimary">@color/bg_primary</item>
@@ -12,43 +11,25 @@
         <item name="android:windowBackground">@color/bg_primary</item>
         <item name="android:statusBarColor">@color/bg_primary</item>
         <item name="android:navigationBarColor">@color/bg_surface</item>
+
         <item name="materialAlertDialogTheme">@style/ThemeOverlay.FunRun.Dialog</item>
-        <item name="bottomNavigationStyle">@style/Widget.App.BottomNavigationView</item>
-        <item name="itemActiveIndicatorStyle">@style/Widget.FunRun.ActiveIndicator</item>
     </style>
 
-    <style name="Widget.App.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView">
-        <item name="itemActiveIndicatorStyle">@style/Widget.FunRun.ActiveIndicator</item>
-    </style>
-    <!-- Dark alert dialog -->
-    <style name="ThemeOverlay.FunRun.Dialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+    <style name="ThemeOverlay.FunRun.Dialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
         <item name="colorSurface">@color/bg_card</item>
         <item name="colorOnSurface">@color/text_primary</item>
-        <item name="android:textColorPrimary">@color/text_primary</item>
-        <item name="android:textColorSecondary">@color/text_secondary</item>
         <item name="buttonBarPositiveButtonStyle">@style/Widget.FunRun.Button.Positive</item>
         <item name="buttonBarNegativeButtonStyle">@style/Widget.FunRun.Button.Negative</item>
         <item name="editTextStyle">@style/Widget.FunRun.EditText</item>
     </style>
 
-    <style name="Widget.FunRun.Button.Positive" parent="Widget.MaterialComponents.Button.TextButton">
+    <style name="Widget.FunRun.Button.Positive" parent="Widget.Material3.Button.TextButton">
         <item name="android:textColor">@color/accent_lime</item>
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="Widget.FunRun.Button.Negative" parent="Widget.MaterialComponents.Button.TextButton">
+    <style name="Widget.FunRun.Button.Negative" parent="Widget.Material3.Button.TextButton">
         <item name="android:textColor">@color/text_secondary</item>
-    </style>
-
-    <!-- Bottom nav active pill — lime background -->
-    <style name="Widget.FunRun.ActiveIndicator" parent="">
-        <item name="android:color">@color/accent_lime_alpha</item>
-        <item name="shapeAppearance">@style/ShapeAppearance.FunRun.ActiveIndicator</item>
-    </style>
-
-    <style name="ShapeAppearance.FunRun.ActiveIndicator" parent="">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">50%</item>
     </style>
 
     <style name="Widget.FunRun.EditText" parent="Widget.AppCompat.EditText">
