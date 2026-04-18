@@ -31,6 +31,8 @@
         android:layout_height="wrap_content"
         android:background="@color/bg_surface"
         android:elevation="8dp"
+        app:backgroundTint="@color/bg_surface"
+        app:itemRippleColor="@null"
         app:itemIconTint="@color/nav_item_color"
         app:itemTextColor="@color/nav_item_color"
         app:itemActiveIndicatorStyle="@null"

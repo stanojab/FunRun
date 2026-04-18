@@ -53,7 +53,7 @@ class DataFragment : Fragment(R.layout.fragment_data) {
 
         // Update total stats header
         tvTotalRuns.text = "${allRuns.size}"
-        tvTotalDistance.text = "%.1f km".format(allRuns.sumOf { it.distance })
+        tvTotalDistance.text = "%.2f km".format(allRuns.sumOf { it.distance })
 
         // Show/hide empty state
         emptyState.visibility = if (allRuns.isEmpty()) View.VISIBLE else View.GONE
@@ -83,7 +83,7 @@ class DataFragment : Fragment(R.layout.fragment_data) {
 
                 // Update stats after delete
                 tvTotalRuns.text = "${runs.size}"
-                tvTotalDistance.text = "%.1f km".format(runs.sumOf { it.distance })
+                tvTotalDistance.text = "%.2f km".format(runs.sumOf { it.distance })
 
                 if (runs.isEmpty()) {
                     emptyState.visibility = View.VISIBLE

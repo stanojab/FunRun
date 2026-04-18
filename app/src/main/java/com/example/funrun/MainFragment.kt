@@ -9,6 +9,9 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import com.example.funrun.databinding.FragmentMainBinding
 import com.example.funrun.databinding.FragmentSettingsDialogBinding
 import com.example.runlibrary.Run
@@ -30,6 +33,12 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         super.onViewCreated(view, savedInstanceState)
         binding.settingsIcon.setOnClickListener { openSettingsDialog() }
         binding.addIcon.setOnClickListener { showAddRunDialog() }
+        ViewCompat.setOnApplyWindowInsetsListener(view) { v, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            // Apply the top inset as padding so the content shifts below the status bar
+            v.updatePadding(top = insets.top)
+            windowInsets
+        }
     }
 
     // Refresh data every time the fragment becomes visible

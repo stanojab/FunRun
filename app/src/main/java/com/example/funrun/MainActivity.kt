@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
@@ -26,6 +27,7 @@ class MainActivity : AppCompatActivity() {
 
         // Set up BottomNavigationView listener
         binding.bottomNavigation.selectedItemId=R.id.nav_home;
+        window.navigationBarColor = ContextCompat.getColor(this, R.color.bg_surface)
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_home -> {

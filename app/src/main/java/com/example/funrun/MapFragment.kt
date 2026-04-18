@@ -2,12 +2,7 @@ package com.example.funrun
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.content.Context
 import android.graphics.Color
-import android.hardware.Sensor
-import android.hardware.SensorEvent
-import android.hardware.SensorEventListener
-import android.hardware.SensorManager
 import android.location.Location
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -15,6 +10,7 @@ import android.os.Looper
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -159,6 +155,7 @@ class MapFragment : Fragment(R.layout.fragment_map), OnMapReadyCallback {
         tvDuration.text = "00:00"
         tvDistance.text = "0.00 km"
         tvPace.text     = "0.00"
+        Toast.makeText(requireContext(), "Run added!", Toast.LENGTH_SHORT).show()
     }
 
     // ─── Location updates ─────────────────────────────────────────────────────

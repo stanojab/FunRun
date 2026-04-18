@@ -11,7 +11,7 @@
         <item name="android:windowBackground">@color/bg_primary</item>
         <item name="android:statusBarColor">@color/bg_primary</item>
         <item name="android:navigationBarColor">@color/bg_surface</item>
-
+        <item name="elevationOverlayEnabled">false</item>
         <item name="materialAlertDialogTheme">@style/ThemeOverlay.FunRun.Dialog</item>
     </style>
 

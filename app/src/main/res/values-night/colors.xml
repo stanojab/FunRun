@@ -2,7 +2,7 @@
 <resources>
     <!-- Backgrounds - DARK -->
     <color name="bg_primary">#0D0D14</color>
-    <color name="bg_surface">#121212</color>
+    <color name="bg_surface">#0F0F0F</color>
     <color name="bg_card">#1A1A28</color>
     <color name="bg_card_elevated">#22223A</color>
 
