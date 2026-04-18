@@ -35,13 +35,11 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         binding.addIcon.setOnClickListener { showAddRunDialog() }
         ViewCompat.setOnApplyWindowInsetsListener(view) { v, windowInsets ->
             val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
-            // Apply the top inset as padding so the content shifts below the status bar
             v.updatePadding(top = insets.top)
             windowInsets
         }
     }
 
-    // Refresh data every time the fragment becomes visible
     override fun onResume() {
         super.onResume()
         refreshUI()
@@ -49,24 +47,82 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
     private fun refreshUI() {
         val app = requireActivity().application as MyApplication
-        val runList = app.getAllRuns()
-        val weeklyGoal = app.getWeeklyGoal() // use saved goal, not hardcoded
-        val lastWeekRuns = filterRunsFromLastWeek(runList)
+        val allRuns = app.getAllRuns()
+        val weeklyGoal = app.getWeeklyGoal()
+        val lastWeekRuns = filterRunsFromLastWeek(allRuns)
 
+        // Progress ring — km remaining
         val totalDistance = lastWeekRuns.sumOf { it.distance }.toFloat()
+        val remaining = (weeklyGoal - totalDistance).coerceAtLeast(0f)
         val progressPercentage = ((totalDistance / weeklyGoal) * 100).toInt().coerceAtMost(100)
-
         binding.circularProgressBar.progress = progressPercentage.toFloat()
-        binding.progressPercentageText.text = "$progressPercentage%"
+        binding.progressPercentageText.text = "%.1f".format(remaining)
+
+        // Days left in week
+        val dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
+        val daysLeft = (Calendar.SATURDAY - dayOfWeek + 1).coerceAtLeast(0)
+        binding.tvDaysLeft.text = "$daysLeft days left"
 
         // Best stats this week
         val longestDistance = lastWeekRuns.maxOfOrNull { it.distance } ?: 0.0
-        val bestPace = lastWeekRuns.minOfOrNull { it.pace } ?: 0.0
+        val bestPace = lastWeekRuns.filter { it.pace > 0 }.minOfOrNull { it.pace } ?: 0.0
         val longestDuration = lastWeekRuns.maxOfOrNull { it.duration } ?: 0L
 
         binding.longestDistanceValue.text = "%.2f km".format(longestDistance)
         binding.bestPaceValue.text = "%.2f".format(bestPace)
         binding.longestDurationValue.text = "${longestDuration / 60000}"
+
+        // Streak + calendar
+        updateStreakAndCalendar(allRuns)
+    }
+
+    private fun updateStreakAndCalendar(allRuns: List<Run>) {
+        // Build set of day-start timestamps that had a run
+        val runDays = allRuns.map { run ->
+            Calendar.getInstance().apply {
+                timeInMillis = run.timestamp
+                set(Calendar.HOUR_OF_DAY, 0); set(Calendar.MINUTE, 0)
+                set(Calendar.SECOND, 0); set(Calendar.MILLISECOND, 0)
+            }.timeInMillis
+        }.toSet()
+
+        // Count streak — consecutive days ending today going backwards
+        var streak = 0
+        val check = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, 0); set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0); set(Calendar.MILLISECOND, 0)
+        }
+        while (runDays.contains(check.timeInMillis)) {
+            streak++
+            check.add(Calendar.DAY_OF_YEAR, -1)
+        }
+        val fire = if (streak > 0) "🔥" else ""
+        binding.tvStreakBadge.text = "$streak day streak $fire"
+
+        // Calendar strip — highlight today and mark days with runs
+        val todayDow = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
+        val dayViews = listOf(
+            Triple(binding.dayMon, binding.dotMon, Calendar.MONDAY),
+            Triple(binding.dayTue, binding.dotTue, Calendar.TUESDAY),
+            Triple(binding.dayWed, binding.dotWed, Calendar.WEDNESDAY),
+            Triple(binding.dayThu, binding.dotThu, Calendar.THURSDAY),
+            Triple(binding.dayFri, binding.dotFri, Calendar.FRIDAY),
+            Triple(binding.daySat, binding.dotSat, Calendar.SATURDAY),
+            Triple(binding.daySun, binding.dotSun, Calendar.SUNDAY),
+        )
+        dayViews.forEach { (container, dot, dow) ->
+            val cal = Calendar.getInstance().apply {
+                set(Calendar.DAY_OF_WEEK, dow)
+                set(Calendar.HOUR_OF_DAY, 0); set(Calendar.MINUTE, 0)
+                set(Calendar.SECOND, 0); set(Calendar.MILLISECOND, 0)
+            }
+            container.setBackgroundResource(
+                if (dow == todayDow) R.drawable.bg_day_today else R.drawable.bg_card
+            )
+            dot.setBackgroundResource(
+                if (runDays.contains(cal.timeInMillis)) R.drawable.bg_dot_active else R.drawable.bg_card
+            )
+        }
     }
 
     private fun filterRunsFromLastWeek(runList: List<Run>): List<Run> {
@@ -91,7 +147,6 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                 AppCompatDelegate.setDefaultNightMode(
                     if (isDarkMode) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
                 )
-
                 val weeklyGoal = dialogBinding.weeklyGoalInput.text.toString().toFloatOrNull() ?: 50.0f
                 app.setWeeklyGoal(weeklyGoal)
                 refreshUI()
@@ -120,7 +175,6 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                         return@setPositiveButton
                     }
 
-                    // Convert minutes to milliseconds for storage
                     val durationMs = (durationMinutes * 60 * 1000).toLong()
                     val run = Run(pace, distance, durationMs, System.currentTimeMillis())
                     (requireActivity().application as MyApplication).addRun(run)

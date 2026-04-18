@@ -13,6 +13,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import com.example.runlibrary.Run
 import com.google.android.gms.location.*
@@ -86,6 +87,8 @@ class MapFragment : Fragment(R.layout.fragment_map), OnMapReadyCallback {
         startButton.setOnClickListener {
             if (isRunning) stopRun() else startRun()
         }
+
+
     }
 
     // ─── Map ready ────────────────────────────────────────────────────────────

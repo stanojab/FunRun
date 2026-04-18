@@ -11,6 +11,9 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.widget.TextView
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import com.example.runlibrary.Run
 
 class DataFragment : Fragment(R.layout.fragment_data) {
@@ -35,6 +38,12 @@ class DataFragment : Fragment(R.layout.fragment_data) {
         recyclerView.adapter = runAdapter
 
         setupSwipeToDelete()
+        ViewCompat.setOnApplyWindowInsetsListener(view) { v, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            // Apply the top inset as padding so the content shifts below the status bar
+            v.updatePadding(top = insets.top)
+            windowInsets
+        }
     }
 
     // Refresh every time the tab is opened

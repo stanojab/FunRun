@@ -46,7 +46,6 @@
 
             </LinearLayout>
 
-            <!-- Header action buttons -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -79,7 +78,7 @@
             </LinearLayout>
         </RelativeLayout>
 
-        <!-- ═══ PROGRESS RING SECTION ═══ -->
+        <!-- ═══ PROGRESS RING ═══ -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -97,7 +96,6 @@
                 android:letterSpacing="0.25"
                 android:layout_marginBottom="16dp" />
 
-            <!-- Progress ring with overlaid text -->
             <FrameLayout
                 android:layout_width="200dp"
                 android:layout_height="200dp"
@@ -115,7 +113,6 @@
                     app:cpb_progress="0"
                     app:cpb_progress_direction="to_right" />
 
-                <!-- Centered text overlay -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -126,26 +123,36 @@
                         android:id="@+id/progressPercentageText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="0%"
+                        android:text="0.0"
                         android:textColor="@color/text_primary"
                         android:textSize="44sp"
                         android:textStyle="bold"
                         android:fontFamily="sans-serif-condensed"
-                        android:lineSpacingMultiplier="0.9" />
+                        android:lineSpacingMultiplier="0.85" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="of goal"
+                        android:text="km left"
+                        android:textColor="@color/accent_lime"
+                        android:textSize="12sp"
+                        android:letterSpacing="0.05" />
+
+                    <TextView
+                        android:id="@+id/tvDaysLeft"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="7 days left"
                         android:textColor="@color/text_secondary"
-                        android:textSize="11sp" />
+                        android:textSize="10sp"
+                        android:layout_marginTop="4dp" />
 
                 </LinearLayout>
             </FrameLayout>
 
         </LinearLayout>
 
-        <!-- ═══ SECTION HEADER ═══ -->
+        <!-- ═══ SECTION HEADER: BEST THIS WEEK ═══ -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -179,7 +186,7 @@
             android:orientation="vertical"
             android:paddingHorizontal="16dp">
 
-            <!-- Longest Distance — full width card -->
+            <!-- Longest Distance -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -189,7 +196,6 @@
                 android:padding="20dp"
                 android:layout_marginBottom="10dp">
 
-                <!-- Lime accent bar -->
                 <View
                     android:layout_width="3dp"
                     android:layout_height="44dp"
@@ -214,7 +220,7 @@
                         android:id="@+id/longestDistanceValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="0.0 km"
+                        android:text="0.00 km"
                         android:textColor="@color/text_primary"
                         android:textSize="34sp"
                         android:textStyle="bold"
@@ -231,13 +237,12 @@
 
             </LinearLayout>
 
-            <!-- Bottom row: Best Pace + Longest Duration side by side -->
+            <!-- Best Pace + Longest Duration -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <!-- Best Pace -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -259,7 +264,7 @@
                         android:id="@+id/bestPaceValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="0.0"
+                        android:text="0.00"
                         android:textColor="@color/accent_lime"
                         android:textSize="30sp"
                         android:textStyle="bold"
@@ -276,7 +281,6 @@
 
                 </LinearLayout>
 
-                <!-- Longest Duration -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -315,6 +319,88 @@
 
                 </LinearLayout>
 
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- ═══ SECTION HEADER: STREAK & CALENDAR ═══ -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="20dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="12dp">
+
+            <View
+                android:layout_width="3dp"
+                android:layout_height="14dp"
+                android:background="@color/accent_lime"
+                android:layout_marginEnd="10dp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="STREAK &amp; ACTIVITY"
+                android:textColor="@color/text_secondary"
+                android:textSize="10sp"
+                android:letterSpacing="0.2"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvStreakBadge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0 day streak"
+                android:textColor="@color/accent_lime"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <!-- Weekly calendar strip -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="16dp"
+            android:paddingBottom="8dp">
+
+            <LinearLayout android:id="@+id/dayMon" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center" android:background="@drawable/bg_card" android:paddingVertical="12dp" android:layout_marginEnd="4dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="M" android:textColor="@color/text_secondary" android:textSize="10sp" android:textStyle="bold"/>
+                <View android:id="@+id/dotMon" android:layout_width="7dp" android:layout_height="7dp" android:background="@color/text_muted" android:layout_marginTop="6dp"/>
+            </LinearLayout>
+
+            <LinearLayout android:id="@+id/dayTue" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center" android:background="@drawable/bg_card" android:paddingVertical="12dp" android:layout_marginEnd="4dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="T" android:textColor="@color/text_secondary" android:textSize="10sp" android:textStyle="bold"/>
+                <View android:id="@+id/dotTue" android:layout_width="7dp" android:layout_height="7dp" android:background="@color/text_muted" android:layout_marginTop="6dp"/>
+            </LinearLayout>
+
+            <LinearLayout android:id="@+id/dayWed" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center" android:background="@drawable/bg_card" android:paddingVertical="12dp" android:layout_marginEnd="4dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="W" android:textColor="@color/text_secondary" android:textSize="10sp" android:textStyle="bold"/>
+                <View android:id="@+id/dotWed" android:layout_width="7dp" android:layout_height="7dp" android:background="@color/text_muted" android:layout_marginTop="6dp"/>
+            </LinearLayout>
+
+            <LinearLayout android:id="@+id/dayThu" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center" android:background="@drawable/bg_card" android:paddingVertical="12dp" android:layout_marginEnd="4dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="T" android:textColor="@color/text_secondary" android:textSize="10sp" android:textStyle="bold"/>
+                <View android:id="@+id/dotThu" android:layout_width="7dp" android:layout_height="7dp" android:background="@color/text_muted" android:layout_marginTop="6dp"/>
+            </LinearLayout>
+
+            <LinearLayout android:id="@+id/dayFri" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center" android:background="@drawable/bg_card" android:paddingVertical="12dp" android:layout_marginEnd="4dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="F" android:textColor="@color/text_secondary" android:textSize="10sp" android:textStyle="bold"/>
+                <View android:id="@+id/dotFri" android:layout_width="7dp" android:layout_height="7dp" android:background="@color/text_muted" android:layout_marginTop="6dp"/>
+            </LinearLayout>
+
+            <LinearLayout android:id="@+id/daySat" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center" android:background="@drawable/bg_card" android:paddingVertical="12dp" android:layout_marginEnd="4dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="S" android:textColor="@color/text_secondary" android:textSize="10sp" android:textStyle="bold"/>
+                <View android:id="@+id/dotSat" android:layout_width="7dp" android:layout_height="7dp" android:background="@color/text_muted" android:layout_marginTop="6dp"/>
+            </LinearLayout>
+
+            <LinearLayout android:id="@+id/daySun" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center" android:background="@drawable/bg_card" android:paddingVertical="12dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="S" android:textColor="@color/text_secondary" android:textSize="10sp" android:textStyle="bold"/>
+                <View android:id="@+id/dotSun" android:layout_width="7dp" android:layout_height="7dp" android:background="@color/text_muted" android:layout_marginTop="6dp"/>
             </LinearLayout>
 
         </LinearLayout>
