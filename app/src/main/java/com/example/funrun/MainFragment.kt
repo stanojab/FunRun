@@ -163,24 +163,24 @@ class MainFragment : Fragment(R.layout.fragment_main) {
             .setPositiveButton("Add") { _, _ ->
                 val distanceInput = dialogView.findViewById<EditText>(R.id.etDistance).text.toString()
                 val durationInput = dialogView.findViewById<EditText>(R.id.etDuration).text.toString()
-                val paceInput = dialogView.findViewById<EditText>(R.id.etPace).text.toString()
 
-                if (distanceInput.isNotEmpty() && durationInput.isNotEmpty() && paceInput.isNotEmpty()) {
+                if (distanceInput.isNotEmpty() && durationInput.isNotEmpty()) {
                     val distance = distanceInput.toDoubleOrNull()
                     val durationMinutes = durationInput.toDoubleOrNull()
-                    val pace = paceInput.toDoubleOrNull()
 
-                    if (distance == null || durationMinutes == null || pace == null) {
+                    if (distance == null || durationMinutes == null) {
                         Toast.makeText(requireContext(), "Please enter valid numbers", Toast.LENGTH_SHORT).show()
                         return@setPositiveButton
                     }
 
+                    // pace = min/km = duration(min) / distance(km)
+                    val pace = if (distance > 0) durationMinutes / distance else 0.0
                     val durationMs = (durationMinutes * 60 * 1000).toLong()
                     val run = Run(pace, distance, durationMs, System.currentTimeMillis())
-                    (requireActivity().application as MyApplication).addRun(run)
-
-                    refreshUI()
-                    Toast.makeText(requireContext(), "Run added!", Toast.LENGTH_SHORT).show()
+                    (requireActivity().application as MyApplication).addRun(run) {
+                        refreshUI()
+                        Toast.makeText(requireContext(), "Run added!", Toast.LENGTH_SHORT).show()
+                    }
                 } else {
                     Toast.makeText(requireContext(), "All fields are required", Toast.LENGTH_SHORT).show()
                 }

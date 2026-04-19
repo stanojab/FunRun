@@ -26,17 +26,23 @@ class MyApplication : Application() {
 
     // ─── Run CRUD ─────────────────────────────────────────────────────────────
 
-    fun addRun(run: Run) {
+    fun addRun(run: Run, onComplete: (() -> Unit)? = null) {
         Thread {
             db.runDao().insertRun(run.toEntity())
+            android.os.Handler(android.os.Looper.getMainLooper()).post {
+                onComplete?.invoke()
+            }
         }.start()
     }
 
-    fun deleteRun(index: Int) {
+    fun deleteRun(index: Int, onComplete: (() -> Unit)? = null) {
         Thread {
             val all = db.runDao().getAllRuns()
             if (index in all.indices) {
                 db.runDao().deleteRunById(all[index].id)
+            }
+            android.os.Handler(android.os.Looper.getMainLooper()).post {
+                onComplete?.invoke()
             }
         }.start()
     }
