@@ -121,7 +121,7 @@ class DataFragment : Fragment(R.layout.fragment_data) {
                 }
                 val textX = itemView.right - 60f
                 val textY = (itemView.top + itemView.bottom) / 2f + 15f
-                c.drawText("🗑", textX, textY, textPaint)
+                c.drawText("", textX, textY, textPaint)
 
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
             }
