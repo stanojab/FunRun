@@ -7,10 +7,10 @@
 ## Posnetki zaslona
 
 <p float="left">
-  <img src="screenshots/scHome.png" width="25%"/>
-  <img src="screenshots/scMap1.png" width="25%"/>
-  <img src="screenshots/scDataScreen.png" width="25%"/>
-  <img src="screenshots/scSettingsScreen.png" width="25%"/>
+  <img src="screenshots/scHome.png" width="200"/>
+  <img src="screenshots/scMap1.png" width="200"/>
+  <img src="screenshots/scDataScreen.png" width="200"/>
+  <img src="screenshots/scSettingsScreen.png" width="200"/>
 </p>
 
 ---
