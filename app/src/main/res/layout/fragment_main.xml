@@ -138,14 +138,7 @@
                         android:textSize="12sp"
                         android:letterSpacing="0.05" />
 
-                    <TextView
-                        android:id="@+id/tvDaysLeft"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="7 days left"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="10sp"
-                        android:layout_marginTop="4dp" />
+
 
                 </LinearLayout>
             </FrameLayout>
@@ -229,11 +222,6 @@
 
                 </LinearLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="🏃"
-                    android:textSize="28sp" />
 
             </LinearLayout>
 

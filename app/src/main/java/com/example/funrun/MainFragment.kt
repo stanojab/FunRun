@@ -56,12 +56,9 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         val remaining = (weeklyGoal - totalDistance).coerceAtLeast(0f)
         val progressPercentage = ((totalDistance / weeklyGoal) * 100).toInt().coerceAtMost(100)
         binding.circularProgressBar.progress = progressPercentage.toFloat()
-        binding.progressPercentageText.text = "%.1f".format(remaining)
+        binding.progressPercentageText.text = "%.2f".format(remaining)
 
-        // Days left in week
-        val dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
-        val daysLeft = (Calendar.SATURDAY - dayOfWeek + 1).coerceAtLeast(0)
-        binding.tvDaysLeft.text = "$daysLeft days left"
+
 
         // Best stats this week
         val longestDistance = lastWeekRuns.maxOfOrNull { it.distance } ?: 0.0
@@ -96,7 +93,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
             streak++
             check.add(Calendar.DAY_OF_YEAR, -1)
         }
-        val fire = if (streak > 0) "🔥" else ""
+        val fire = if (streak > 0) "" else ""
         binding.tvStreakBadge.text = "$streak day streak $fire"
 
         // Calendar strip — highlight today and mark days with runs
