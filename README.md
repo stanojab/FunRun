@@ -11,8 +11,8 @@
   <img src="screenshots/scMap1.png" width="200"/>
   <img src="screenshots/scDataScreen.png" width="200"/>
   <img src="screenshots/scSettingsScreen.png" width="200"/>
-  <img src="screenshots/add_run.png" width="200"/>
 </p>
+
 ---
 
 ## Funkcionalnosti
