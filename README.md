@@ -77,7 +77,7 @@
 
 2. Dodaj Google Maps API ključ v `local.properties`:
    ```
-   MAPS_API_KEY=tvoj_kljuc_tukaj
+   MAPS_API_KEY=tvoj_kljuc
    ```
 3. Sinhroniziraj Gradle in zaženi na fizični napravi ali emulatorju.
 
