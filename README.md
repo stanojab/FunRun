@@ -5,7 +5,7 @@
 ![Target SDK](https://img.shields.io/badge/Target%20SDK-34-blue)
 ![Room](https://img.shields.io/badge/Database-Room-orange)
 ![Google Maps](https://img.shields.io/badge/Maps-Google%20Maps-red?logo=googlemaps)
-![License](https://img.shields.io/badge/License-MIT-yellow)
+
 
  Android aplikacija za sledenje tekom, zgrajena s Kotlinom. FunRun uporablja GPS v realnem času za sledenje tekom, vizualizira tedenski napredek in shranjuje celotno zgodovino tekov lokalno v podatkovni bazi Room.
 
