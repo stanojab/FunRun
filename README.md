@@ -7,12 +7,12 @@
 ![Google Maps](https://img.shields.io/badge/Maps-Google%20Maps-red?logo=googlemaps)
 
 
- Android aplikacija za sledenje tekom, zgrajena s Kotlinom. FunRun uporablja GPS v realnem času za sledenje tekom, vizualizira tedenski napredek in shranjuje celotno zgodovino tekov lokalno v podatkovni bazi Room.
+An Android run-tracking application built with Kotlin. FunRun uses real-time GPS to track runs, visualizes weekly progress, and stores the complete run history locally in a Room database.
 
 ---
 
 
-## Posnetki zaslona
+## Screenshots
 
 <p float="left">
   <img src="screenshots/scHome.png" width="200"/>
@@ -23,64 +23,61 @@
 
 ---
 
-## Funkcionalnosti
+## Features
 
-###  Sledenje GPS v realnem času
-- Neprekinjene posodobitve lokacije z uporabo **Fused Location Provider API**
-- Risanje poti v živo na Google Zemljevidih s polilinijami
-- Natančen izračun razdalje iz GPS koordinat s filtiranjem šuma (zavrne meritve z natančnostjo > 20 m in premiki < 1 m)
-
-
-###  Domača nadzorna plošča
-- Krožni obroč napredka tedenskega cilja s prikazom **preostalih km**
-- Najboljši rezultati zadnjih 7 dni: najdaljša razdalja, najboljši tempo, najdaljše trajanje teka
-- **Sledilnik serije** — šteje zaporedne dni z vsaj enim tekom
-- **Tedenski aktivnostni koledar** — pas Pon–Ned s piko na dnevih s tekom in označenim današnjim dnem
-
-###  Zgodovina tekov
-- Celoten seznam tekov, razvrščen od najnovejšega, z razdaljo, tempom, trajanjem in datumom
-- **Povleci levo za brisanje** kateregakoli teka z animiranim rdečim ozadjem
-- Skupno število tekov in skupna razdalja prikazana na vrhu
+### Real-Time GPS Tracking
+- Continuous location updates using the **Fused Location Provider API**
+- Live route drawing on Google Maps with polylines
+- Accurate distance calculation from GPS coordinates with noise filtering (rejects readings with accuracy > 20 m and movements < 1 m)
 
 
-###  Nastavitve
-- Preklop med **temnim in svetlim načinom** — shranjuje se med sejami s SharedPreferences
-- Nastavitev lastnega **tedenskega cilja razdalje** v km
+### Home Dashboard
+- Circular progress ring for the weekly goal showing **remaining km**
+- Best results from the last 7 days: longest distance, best pace, longest run duration
+- **Streak tracker** — counts consecutive days with at least one run
+- **Weekly activity calendar** — Mon–Sun strip with a dot on days with a run and today highlighted
+
+### Run History
+- Complete list of runs sorted from newest, with distance, pace, duration, and date
+- **Swipe left to delete** any run with an animated red background
+- Total number of runs and total distance displayed at the top
+
+
+### Settings
+- Toggle between **dark and light mode** — persisted across sessions with SharedPreferences
+- Set a custom **weekly distance goal** in km
 
 ---
 
-## Tehnološki sklad
+## Tech Stack
 
-| Plast | Tehnologija |
+| Layer | Technology |
 |---|---|
-| Jezik | Kotlin |
-| Uporabniški vmesnik | XML postavitve, View Binding, Material 3 |
-| Navigacija | Fragment Manager + spodnja navigacijska vrstica |
-| Zemljevidi | Google Maps SDK, Fused Location Provider |
-| Podatkovna baza | **Room (SQLite)** s KSP obdelavo anotacij |
-| Nastavitve | SharedPreferences |
-| Arhitektura | Ena aktivnost, več fragmentov |
-| Gradnja | Gradle s KSP |
+| Language | Kotlin |
+| UI | XML layouts, View Binding, Material 3 |
+| Navigation | Fragment Manager + bottom navigation bar |
+| Maps | Google Maps SDK, Fused Location Provider |
+| Database | **Room (SQLite)** with KSP annotation processing |
+| Preferences | SharedPreferences |
+| Architecture | Single activity, multiple fragments |
+| Build | Gradle with KSP |
 
 ---
 
 
-## Začetek uporabe(Developers)
+## Getting Started (Developers)
 
-### Namestitev
+### Installation
 
-1. Kloniraj repozitorij:
-   ```bash
-   git clone  https://github.com/stanojab/FunRun.git
+1. Clone the repository:
+```bash
+   git clone https://github.com/stanojab/FunRun.git
+```
 
-   ```
-
-2. Dodaj Google Maps API ključ v `local.properties`:
-   ```
-   MAPS_API_KEY=tvoj_kljuc
-   ```
-3. Sinhroniziraj Gradle in zaženi na fizični napravi ali emulatorju.
+2. Add your Google Maps API key in `local.properties`:
+```
+MAPS_API_KEY=your_api_key
+```
+3. Sync Gradle and run on a physical device or emulator.
 
 ---
-
-*Zgrajeno s Kotlinom · Android · Google Maps SDK · Room Database*
